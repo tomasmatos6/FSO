@@ -25,7 +25,7 @@ public class GUI_GENERICA extends JFrame{
 	private JTextField dist, ang, raio;
 	protected JTextArea logText;
 	private JPanel canalMenu;
-	private JRadioButton rdbtnAbrirCanal;
+	private JRadioButton openClose;
 	private JPanel controleMenu;
 	private JButton ficheiroButton, leftButton, rightButton, backButton, fowardButton, stopButton, btnLimparLog;
 	private JCheckBox comportamentoCheck;
@@ -98,9 +98,9 @@ public class GUI_GENERICA extends JFrame{
 		nMsg.setBounds(164, 60, 70, 25);
 		canalMenu.add(nMsg);
 		
-		rdbtnAbrirCanal = new JRadioButton("Abrir Canal");
-		rdbtnAbrirCanal.setBounds(351, 60, 112, 25);
-		canalMenu.add(rdbtnAbrirCanal);
+		openClose = new JRadioButton("Abrir Canal");
+		openClose.setBounds(351, 60, 112, 25);
+		canalMenu.add(openClose);
 		
 		controleMenu = new JPanel();
 		controleMenu.setLayout(null);

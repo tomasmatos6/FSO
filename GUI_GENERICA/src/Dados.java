@@ -3,7 +3,7 @@ import robot.RobotLegoEV3;
 public class Dados {
 	private int raio, angulo, distancia;
 	private String nomeRobot;
-	private boolean onOff;
+	private boolean onOff, openClose;
 	private RobotLegoEV3 robot;
 	
 	public Dados() {
@@ -12,9 +12,18 @@ public class Dados {
 		distancia=20;
 		nomeRobot="EV8";
 		onOff=false;
+		openClose = false;
 		robot = new RobotLegoEV3();
 	}
 	
+	public boolean isOpenClose() {
+		return openClose;
+	}
+
+	public void setOpenClose(boolean openClose) {
+		this.openClose = openClose;
+	}
+
 	public RobotLegoEV3 getRobot() {
 		return robot;
 	}

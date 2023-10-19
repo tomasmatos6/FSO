@@ -15,14 +15,39 @@ public class canalComunicacao {
 	// dimensão máxima em bytes do buffer
 	final int BUFFER_MAX= 128;
 	// Indíces para o buffer circular
-	int putIdx = 0;
-	int getIdx = 0;
+	int putIdx;
+	int getIdx;
+	
+	//Tamanho máximo de uma mensagem
+	int msgOffset;
 	// construtor onde se cria o canal
 	public canalComunicacao(){ 
 		ficheiro=null;
 		canal= null;
 		buffer= null;
+		putIdx = 0;
+		getIdx = 0;
+		msgOffset = 16;
 	}
+	
+	// GET PARA O LEITOR
+	
+	// PUT PARA O ESCRITOR
+	
+	public int increasePutIdx() {
+		int aux = this.putIdx*16 % BUFFER_MAX;
+		System.out.println("Posição put " + aux/16);
+		putIdx++;
+		return aux;
+	}
+	
+	public int increaseGetIdx() {
+		int aux = this.getIdx*16 % BUFFER_MAX;
+		System.out.println("Posição get " + aux/16);
+		getIdx++;
+		return aux;
+	}
+	
 	// abre o canal de comunicação
 	public boolean abrirCanal(){
 		//cria um ficheiro com o nome comunicacao.dat
@@ -39,32 +64,26 @@ public class canalComunicacao {
 	}
 	
 	// recebe uma mensagem convertendo-a numa String
-	public Mensagem receberMensagem() {
-		buffer.position(0);
+	public Mensagem receberMensagem(int idx) {
+		buffer.position(idx);
+		//System.out.println("get " + getIdx);
 		int numero = buffer.getInt();
 		int comando = buffer.getInt();
 		int arg1 = buffer.getInt();
 		int arg2 = buffer.getInt();
-		Mensagem msg = new Mensagem(numero, comando, arg1, arg2);
 		return new Mensagem(numero, comando, arg1, arg2);
 	}
 	
 	
 	// envia uma String como mensagem
-	public void enviarMensagem(Mensagem msg) {
+	public void enviarMensagem(Mensagem msg, int idx) {
 		int c;
-		buffer.position(0);
-		/**
-		for(int i=0;i<4;i++) {
-			c = msg.getArg(i);
-			buffer.putInt(c);
-		}
-		*/
+		buffer.position(idx);
+		//System.out.println("put " + putIdx);
 		buffer.putInt(msg.getNumero());
 		buffer.putInt(msg.getComando());
 		buffer.putInt(msg.getArg1());
 		buffer.putInt(msg.getArg2());
-		buffer.putInt('\0');
 	}
 	
 	

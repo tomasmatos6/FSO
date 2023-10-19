@@ -1,5 +1,5 @@
 
-public class Mensagem {
+public class Mensagem implements iMensagem {
 	private int numero;
 	private int comando;
 	private int arg1;
