@@ -2,7 +2,7 @@ import robot.RobotLegoEV3;
 
 public class Dados {
 	private int raio, angulo, distancia;
-	private String nomeRobot;
+	private String nomeRobot, canalPath;
 	private boolean onOff, openClose;
 	private RobotLegoEV3 robot;
 	
@@ -13,9 +13,18 @@ public class Dados {
 		nomeRobot="EV8";
 		onOff=false;
 		openClose = false;
-		robot = new RobotLegoEV3();
+		canalPath = "";
+		//robot = new RobotLegoEV3();
 	}
 	
+	public String getCanalPath() {
+		return canalPath;
+	}
+
+	public void setCanalPath(String canalPath) {
+		this.canalPath = canalPath;
+	}
+
 	public boolean isOpenClose() {
 		return openClose;
 	}

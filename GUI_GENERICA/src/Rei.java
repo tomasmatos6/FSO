@@ -34,7 +34,7 @@ public class Rei implements iRei {
 					if(d.isOpenClose()) {
 						estado = CANAL_ABERTO;
 					} else {
-						if(ccc.abrirCanal())
+						if(ccc.abrirCanal(d.getCanalPath()))
 							estado = CANAL_ABERTO;
 					}
 					break;
@@ -59,7 +59,7 @@ public class Rei implements iRei {
 				break;
 			case FECHAR_CANAL:
 				ccc.fecharCanal();
-				System.exit(0);
+				estado = FECHAR_CANAL;
 			}
 		}
 	}

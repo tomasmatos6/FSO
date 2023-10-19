@@ -6,10 +6,10 @@ public class canalComunicacaoConsistente extends canalComunicacao {
 	public void getAndSetEscritor(Mensagem mensagem) {
 		try {
 			FileLock fl = canal.lock();
-			Mensagem msg = receberMensagem(putIdx*16 % BUFFER_MAX);
+			Mensagem msg = receberMensagem(getPutIdx());
 			//Verificar se o leitor já leu a mensagem
 			if(msg.getComando() == 4 || msg.getNumero() == 0) {
-				enviarMensagem(mensagem, putIdx*16 % BUFFER_MAX);
+				enviarMensagem(mensagem, getPutIdx());
 				increasePutIdx();
 			}
 			fl.release();
@@ -23,13 +23,13 @@ public class canalComunicacaoConsistente extends canalComunicacao {
 		Mensagem currentMsg = null;
 		try {
 			FileLock fl = canal.lock();
-			Mensagem msg = receberMensagem(getIdx*16 % BUFFER_MAX);
+			Mensagem msg = receberMensagem(getGetIdx());
 			// Verificar se esta a ler a mesma mensagem
 			if(msg.getNumero() != lastMsgNum) {
 				lastMsgNum = msg.getNumero();
 				currentMsg = msg;
 				// Mensagem com o mesmo numero e comando 4 que marca que a leitura foi realizada
-				enviarMensagem(new Mensagem(lastMsgNum, 4, 0, 0), getIdx*16 % BUFFER_MAX);
+				enviarMensagem(new Mensagem(lastMsgNum, 4, 0, 0), getGetIdx());
 				increaseGetIdx();
 			}	
 			fl.release();
@@ -52,7 +52,7 @@ public class canalComunicacaoConsistente extends canalComunicacao {
 		Mensagem msg9 = new Mensagem(9, 2, 19, 30);
 		
 		canalComunicacaoConsistente ccc = new canalComunicacaoConsistente();
-		ccc.abrirCanal();
+		ccc.abrirCanal("");
 		ccc.getAndSetEscritor(msg);
 		System.out.println(ccc.getAndSetLeitor());
 		ccc.getAndSetEscritor(msg1);

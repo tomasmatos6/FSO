@@ -17,7 +17,13 @@ import javax.swing.JRadioButton;
 import javax.swing.JCheckBox;
 import javax.swing.JTextArea;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.awt.event.ActionEvent;
+import javax.swing.JFileChooser;
+
+import java.io.BufferedReader; 
+import java.io.FileReader; 
+import java.io.IOException; 
 
 
 public class GUI_GENERICA extends JFrame{
@@ -87,6 +93,21 @@ public class GUI_GENERICA extends JFrame{
 		canalMenu.add(pathFicheiro);
 		
 		ficheiroButton = new JButton("...");
+		ficheiroButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				JFileChooser chooser = new JFileChooser(".\\GUI_GENERICA\\");
+				
+				int dialog = chooser.showOpenDialog(canalMenu);
+				
+				if(dialog==JFileChooser.APPROVE_OPTION) {
+					File file = chooser.getSelectedFile();
+					String path = file.getPath();
+					dados.setCanalPath(path);
+					pathFicheiro.setText(path);
+				}
+				
+			}
+		});
 		ficheiroButton.setBounds(488, 23, 35, 25);
 		canalMenu.add(ficheiroButton);
 		
@@ -99,6 +120,11 @@ public class GUI_GENERICA extends JFrame{
 		canalMenu.add(nMsg);
 		
 		openClose = new JRadioButton("Abrir Canal");
+		openClose.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+			}
+		});
 		openClose.setBounds(351, 60, 112, 25);
 		canalMenu.add(openClose);
 		

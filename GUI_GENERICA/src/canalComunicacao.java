@@ -15,8 +15,8 @@ public class canalComunicacao {
 	// dimensão máxima em bytes do buffer
 	final int BUFFER_MAX= 128;
 	// Indíces para o buffer circular
-	int putIdx;
-	int getIdx;
+	private int putIdx;
+	private int getIdx;
 	
 	//Tamanho máximo de uma mensagem
 	int msgOffset;
@@ -33,23 +33,24 @@ public class canalComunicacao {
 	// GET PARA O LEITOR
 	
 	// PUT PARA O ESCRITOR
-	
-	public int increasePutIdx() {
-		int aux = this.putIdx*16 % BUFFER_MAX;
-		System.out.println("Posição put " + aux/16);
-		putIdx++;
-		return aux;
+	public int getPutIdx() {
+		return putIdx*16 % BUFFER_MAX;
 	}
 	
-	public int increaseGetIdx() {
-		int aux = this.getIdx*16 % BUFFER_MAX;
-		System.out.println("Posição get " + aux/16);
+	public int getGetIdx() {
+		return getIdx*16 % BUFFER_MAX;
+	}
+	
+	public void increasePutIdx() {
+		putIdx++;
+	}
+	
+	public void increaseGetIdx() {
 		getIdx++;
-		return aux;
 	}
 	
 	// abre o canal de comunicação
-	public boolean abrirCanal(){
+	public boolean abrirCanal(String path){
 		//cria um ficheiro com o nome comunicacao.dat
 		ficheiro = new File("comunicacao.dat");
 		//cria um canal de comunicação de leitura e escrita
