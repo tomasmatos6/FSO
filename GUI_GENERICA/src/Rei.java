@@ -14,7 +14,7 @@ public class Rei implements iRei {
 	public void Ativo() {
 		
 	}
-	
+	// Método Run
 	public void run() {
 		while(estado != FECHAR_CANAL) {
 			switch(estado) {
