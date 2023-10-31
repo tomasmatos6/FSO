@@ -18,7 +18,7 @@ public class Subdito implements iSubdito {
 	public Subdito() {
 		d = new Dados();
 		ccc = new canalComunicacaoConsistente();
-		estado = DESATIVO;
+		estado = ABRIR_CANAL;
 		mensagens = new ArrayList<Mensagem>();
 		robot = d.getRobot();
 	}
@@ -26,7 +26,7 @@ public class Subdito implements iSubdito {
 	private void comunicarRei() {
 		while(estado != FECHAR_CANAL) {
 			switch(estado) {
-			case ATIVO:
+			case ABRIR_CANAL:
 				try {
 					Thread.sleep(100);
 					if(d.isOpenClose()) {
@@ -55,7 +55,7 @@ public class Subdito implements iSubdito {
 				}
 			case MEMORIZAR:
 				mensagens.add(msg);
-				estado = INTERPRETAR_MENSAGENS;
+				estado = DESATIVO;
 			}
 		}
 	}
@@ -87,6 +87,7 @@ public class Subdito implements iSubdito {
 				if(!mensagens.isEmpty()) {
 					estado = INTERPRETAR_MENSAGENS;
 				}
+				estado = ATIVO;
 			case INTERPRETAR_MENSAGENS:
 				msg = mensagens.remove(0);
 				interpretarMensagens(msg.getComando(), msg.getArg1(), msg.getArg2());

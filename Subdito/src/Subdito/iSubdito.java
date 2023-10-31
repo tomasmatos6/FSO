@@ -3,7 +3,7 @@ package Subdito;
 public interface iSubdito {
 	int DESATIVO = 0;
 	int ATIVO = 1;
-	int CANAL_ABERTO = 2;
+	int ABRIR_CANAL = 2;
 	int MEMORIZAR = 8;
 	int ENVIAR = 9;
 	int FECHAR_CANAL = 10;
