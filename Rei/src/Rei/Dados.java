@@ -1,11 +1,9 @@
 package Rei;
-import robot.RobotLegoEV3;
 
 public class Dados {
-	private int raio, angulo, distancia;
+	private int raio, angulo, distancia, nMsg;
 	private String nomeRobot, canalPath;
-	private boolean onOff, openClose;
-	private RobotLegoEV3 robot;
+	private boolean onOff, openClose, comportamento;
 	
 	public Dados() {
 		raio=10;
@@ -15,9 +13,25 @@ public class Dados {
 		onOff=false;
 		openClose = false;
 		canalPath = "";
-		//robot = new RobotLegoEV3();
+		nMsg = 8;
 	}
 	
+	public int getnMsg() {
+		return nMsg;
+	}
+
+	public void setnMsg(int nMsg) {
+		this.nMsg = nMsg;
+	}
+
+	public boolean isComportamento() {
+		return comportamento;
+	}
+
+	public void setComportamento(boolean comportamento) {
+		this.comportamento = comportamento;
+	}
+
 	public String getCanalPath() {
 		return canalPath;
 	}
@@ -32,14 +46,6 @@ public class Dados {
 
 	public void setOpenClose(boolean openClose) {
 		this.openClose = openClose;
-	}
-
-	public RobotLegoEV3 getRobot() {
-		return robot;
-	}
-
-	public void setRobot(RobotLegoEV3 robot) {
-		this.robot = robot;
 	}
 
 	public boolean isOnOff() {

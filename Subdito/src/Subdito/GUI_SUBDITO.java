@@ -14,7 +14,8 @@ public class GUI_SUBDITO extends GUI_GENERICA {
 	private JTextField nomeRobot;
 	JRadioButton rdbtnAbrirfecharRobot;
 	
-	public GUI_SUBDITO() {
+	public GUI_SUBDITO(Subdito subdito) {
+		super(subdito);
 		this.setTitle("GUI Subdito");
 		
 		JPanel panel = new JPanel();
@@ -42,16 +43,17 @@ public class GUI_SUBDITO extends GUI_GENERICA {
 		rdbtnAbrirfecharRobot.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					if(!dados.isOnOff()) {
+					if(!dados.isOpenClose()) {
 						boolean open = dados.getRobot().OpenEV3(dados.getNomeRobot());
 						if(open) rdbtnAbrirfecharRobot.setSelected(true);
-						dados.setOnOff(true);
-						logText.append("isOnOff"+rdbtnAbrirfecharRobot.isSelected());
+						dados.setOpenClose(true);
+						logText.append("isOpenClose"+rdbtnAbrirfecharRobot.isSelected()+"\n");
+						subdito.setEstadoRobot(Subdito.LER_MEMORIA);
 					}
 					else {
 						dados.getRobot().CloseEV3();
 						dados.setOnOff(false);
-						logText.append("isOnOff"+rdbtnAbrirfecharRobot.isSelected());
+						logText.append("isOpenClose"+rdbtnAbrirfecharRobot.isSelected()+"\n");
 					}
 				} catch(Exception exp) {
 					logText.append("Robot não conectado \n");
@@ -64,8 +66,5 @@ public class GUI_SUBDITO extends GUI_GENERICA {
 		
 		
 	
-	}
-	public static void main(String[] args) {
-		GUI_SUBDITO gui = new GUI_SUBDITO();
 	}
 }

@@ -4,6 +4,8 @@ import javax.swing.border.TitledBorder;
 import javax.swing.border.LineBorder;
 import java.awt.Color;
 import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class GUI_REI extends GUI_GENERICA {
 	public GUI_REI(Rei rei) {
@@ -17,10 +19,22 @@ public class GUI_REI extends GUI_GENERICA {
 		panel.setLayout(null);
 		
 		JButton btn8Comandos = new JButton("8 Comandos Aleatórios");
+		btn8Comandos.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				// COMANDO ALEATORIO COM OS PARAMETROS ALEATORIOS
+				// ENVIAR A MENSAGEM
+				// DORMIR
+				// REPETIR
+			}
+		});
 		btn8Comandos.setBounds(25, 28, 226, 31);
 		panel.add(btn8Comandos);
 		
 		JButton btn16Comandos = new JButton("16 Comandos Aleatórios");
+		btn16Comandos.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
 		btn16Comandos.setBounds(300, 28, 226, 31);
 		panel.add(btn16Comandos);
 	}

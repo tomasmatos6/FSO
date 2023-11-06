@@ -12,4 +12,5 @@ public interface iRei {
 	int COMANDOS8 = 8;
 	int COMANDOS16 = 9;
 	int FECHAR_CANAL = 10;
+	int ABRIR_CANAL = 11;
 }

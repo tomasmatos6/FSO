@@ -24,7 +24,10 @@ import javax.swing.JFileChooser;
 
 import java.io.BufferedReader; 
 import java.io.FileReader; 
-import java.io.IOException; 
+import java.io.IOException;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ChangeEvent;
+import javax.swing.SpinnerNumberModel; 
 
 
 public class GUI_GENERICA extends JFrame{
@@ -36,6 +39,7 @@ public class GUI_GENERICA extends JFrame{
 	private JPanel controleMenu;
 	private JButton ficheiroButton, leftButton, rightButton, backButton, fowardButton, stopButton, btnLimparLog;
 	private JCheckBox comportamentoCheck;
+	private Subdito subdito;
 	
 	// minhas variaveis
 	protected Dados dados;
@@ -45,26 +49,20 @@ public class GUI_GENERICA extends JFrame{
 	public void run() {
 		
 	}
-	
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		GUI_GENERICA frame = new GUI_GENERICA();
-	}
 
 	// inicialização das minhas variáveis
 	public void initVariaveis() {
-		dados = new Dados();
+		dados = subdito.getDados();
 		robot = dados.getRobot();
 	}
 	
 	/**
 	 * Create the application.
 	 */
-	public GUI_GENERICA() {
+	public GUI_GENERICA(Subdito subdito) {
 		setTitle("Trab 1 - GUI");
 		// instancia das minhas variaveis
+		this.subdito = subdito;
 		initVariaveis();
 		initialize();	
 		
@@ -96,7 +94,7 @@ public class GUI_GENERICA extends JFrame{
 		ficheiroButton = new JButton("...");
 		ficheiroButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				JFileChooser chooser = new JFileChooser(".\\GUI_GENERICA\\");
+				JFileChooser chooser = new JFileChooser(".\\");
 				
 				int dialog = chooser.showOpenDialog(canalMenu);
 				
@@ -117,13 +115,21 @@ public class GUI_GENERICA extends JFrame{
 		canalMenu.add(lblNMsg);
 		
 		JSpinner nMsg = new JSpinner();
+		nMsg.setModel(new SpinnerNumberModel(8, 8, 12, 1));
+		nMsg.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent e) {
+				subdito.getDados().setnMsg((int)nMsg.getValue());
+				
+			}
+		});
 		nMsg.setBounds(164, 60, 70, 25);
 		canalMenu.add(nMsg);
 		
 		openClose = new JRadioButton("Abrir Canal");
 		openClose.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				//dados.setOpenClose(openClose.isEnabled());
+				subdito.setEstadoRei(Subdito.ABRIR_CANAL);
 			}
 		});
 		openClose.setBounds(351, 60, 112, 25);
@@ -249,6 +255,19 @@ public class GUI_GENERICA extends JFrame{
 		controleMenu.add(fowardButton);
 		
 		comportamentoCheck = new JCheckBox("Ativar/Desativar comportamento");
+		comportamentoCheck.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dados.setComportamento(comportamentoCheck.isEnabled());
+				subdito.setEstadoRobot(Subdito.ATIVO);
+				if(dados.isComportamento()) {
+					fowardButton.setEnabled(true);
+					backButton.setEnabled(true);
+					leftButton.setEnabled(true);
+					rightButton.setEnabled(true);
+					stopButton.setEnabled(true);
+				}
+			}
+		});
 		comportamentoCheck.setBounds(8, 333, 254, 23);
 		getContentPane().add(comportamentoCheck);
 		
@@ -263,15 +282,7 @@ public class GUI_GENERICA extends JFrame{
 		logText = new JTextArea();
 		logText.setBounds(12, 384, 549, 217);
 		getContentPane().add(logText);
-		
-		if(dados.isOnOff()) {
-			fowardButton.setEnabled(true);
-			backButton.setEnabled(true);
-			leftButton.setEnabled(true);
-			rightButton.setEnabled(true);
-			stopButton.setEnabled(true);
-		}
-		
+	
 		setVisible(true);
 	}
 }

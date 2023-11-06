@@ -11,6 +11,7 @@ public class CriarMensagem {
 	public CriarMensagem(Dados d) {
 		dados = d;
 		numero = 0;
+		msg = new Mensagem(0,0,0,0);
 	}
 	
 	public Mensagem MsgFrente() {

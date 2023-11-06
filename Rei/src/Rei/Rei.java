@@ -4,6 +4,19 @@ import CanalComunicacao.CriarMensagem;
 import CanalComunicacao.canalComunicacaoConsistente;
 
 public class Rei implements iRei {
+	private Dados dados;
+	private CriarMensagem cm;
+	private canalComunicacaoConsistente ccc;
+	private GUI_REI gui_rei;
+	
+	public Rei() {
+		dados = new Dados();
+		cm = new CriarMensagem(dados);
+		ccc = new canalComunicacaoConsistente(this);
+		estado = DESATIVO;
+		gui_rei = new GUI_REI(this);
+	}
+	
 	private int estado;
 	public int getEstado() {
 		return estado;
@@ -12,19 +25,9 @@ public class Rei implements iRei {
 	public void setEstado(int estado) {
 		this.estado = estado;
 	}
-	Dados d;
-	CriarMensagem cm;
-	canalComunicacaoConsistente ccc;
 	
-	public Rei() {
-		d = new Dados();
-		cm = new CriarMensagem(d);
-		ccc = new canalComunicacaoConsistente();
-		estado = DESATIVO;
-	}
-	
-	public void Ativo() {
-		
+	public Dados getDados() {
+		return dados;
 	}
 	// Método Run
 	public void run() {
@@ -33,7 +36,8 @@ public class Rei implements iRei {
 			case DESATIVO:
 				try {
 					Thread.sleep(100);
-					if(d.isOnOff()) 
+					
+					if(dados.isComportamento()) 
 						estado = ATIVO;
 					break;
 				} catch (InterruptedException e) {
@@ -43,17 +47,31 @@ public class Rei implements iRei {
 			case ATIVO:
 				try {
 					Thread.sleep(100);
-					if(d.isOpenClose()) {
-						estado = CANAL_ABERTO;
-					} else {
-						if(ccc.abrirCanal(d.getCanalPath()))
-							estado = CANAL_ABERTO;
-					}
-					break;
+					if(dados.isOnOff())
+						estado = ABRIR_CANAL;
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+			case ABRIR_CANAL:
+				try {
+					Thread.sleep(100);	
+					if(ccc.abrirCanal(dados.getCanalPath()))
+						estado = CANAL_ABERTO;
+					break;
+					
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			case CANAL_ABERTO:
+				try {
+					Thread.sleep(100);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				break;
 			case FRENTE:
 				ccc.getAndSetEscritor(cm.MsgFrente());
 				estado = CANAL_ABERTO;
@@ -79,5 +97,10 @@ public class Rei implements iRei {
 				estado = FECHAR_CANAL;
 			}
 		}
+	}
+	
+	public static void main(String[] args) {
+		Rei rei = new Rei();
+		rei.run();
 	}
 }

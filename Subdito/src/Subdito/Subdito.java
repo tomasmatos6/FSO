@@ -8,118 +8,150 @@ import robot.RobotLegoEV3;
 
 public class Subdito implements iSubdito {
 	private static int VROBOT = 30;
-	private int estado;
+	private int estado_rei, estado_robot;
 	private Dados d;
 	private canalComunicacaoConsistente ccc;
-	private Mensagem msg;
+	private Mensagem msg_canal, msg_memoria;
 	private ArrayList<Mensagem> mensagens;
 	private RobotLegoEV3 robot;
+	private GUI_SUBDITO gui_subdito;
 	
 	public Subdito() {
 		d = new Dados();
-		ccc = new canalComunicacaoConsistente();
-		estado = ABRIR_CANAL;
+		ccc = new canalComunicacaoConsistente(this);
+		estado_rei = DESATIVO;
+		estado_robot = DESATIVO;
 		mensagens = new ArrayList<Mensagem>();
 		robot = d.getRobot();
+		gui_subdito = new GUI_SUBDITO(this);
+	}
+	
+	public Dados getDados() {
+		return this.d;
+	}
+	
+	public void setEstadoRei(int estado) {
+		this.estado_rei = estado;
+	}
+	
+	public void setEstadoRobot(int estado) {
+		this.estado_robot = estado;
 	}
 	
 	private void comunicarRei() {
-		while(estado != FECHAR_CANAL) {
-			switch(estado) {
-			case ABRIR_CANAL:
-				try {
-					Thread.sleep(100);
-					if(d.isOpenClose()) {
-						estado = LER_CANAL;
-					} else {
-						if(ccc.abrirCanal(d.getCanalPath()))
-							estado = LER_CANAL;
-					}
-					break;
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			case LER_CANAL:
-				// LER MENSAGENS DO CANAL
-				msg = ccc.getAndSetLeitor();
-				if(msg != null) {
-					estado = MEMORIZAR;
-				}
-				// SE NÃO HOUVER MENSAGENS
-				try {
-					Thread.sleep(100);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			case MEMORIZAR:
-				mensagens.add(msg);
-				estado = DESATIVO;
+		//System.out.println("Estado Rei = " + estado_rei);
+		switch(estado_rei) {
+		case DESATIVO:
+			try {
+				Thread.sleep(100);
+//					if(d.isOpenClose()) {
+//						estado_rei = ABRIR_CANAL;
+//					}
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
+			break;
+		case ABRIR_CANAL:
+			if(ccc.abrirCanal(d.getCanalPath()))
+				estado_rei = LER_CANAL;
+			break;
+		case LER_CANAL:
+			// LER MENSAGENS DO CANAL
+			msg_canal = ccc.getAndSetLeitor();
+			
+			if(msg_canal != null) {
+				//System.out.println("LER CANAL = " + msg);
+				estado_rei = MEMORIZAR;	
+			}
+			// SE NÃO HOUVER MENSAGENS
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			break;
+		case MEMORIZAR:
+			mensagens.add(msg_canal);
+			System.out.println(mensagens);
+			estado_rei = LER_CANAL;
+			break;
 		}
 	}
 	
 	private void comunicarRobot() {
-		while(estado != FECHAR_CANAL) {
-			switch(estado) {
-			case DESATIVO:
-				try {
-					Thread.sleep(100);
-					if(d.isComportamento()) 
-						estado = ATIVO;
-					break;
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}	
-			case ATIVO:
-				try {
-					Thread.sleep(100);
-					if(d.isOnOff()) 
-						estado = LER_MEMORIA;
-					break;
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}	
-			case LER_MEMORIA:
-				if(!mensagens.isEmpty()) {
-					estado = INTERPRETAR_MENSAGENS;
-				}
-				estado = ATIVO;
-			case INTERPRETAR_MENSAGENS:
-				msg = mensagens.remove(0);
-				interpretarMensagens(msg.getComando(), msg.getArg1(), msg.getArg2());
-				estado = DORMIR;
-			case DORMIR:
-				// reta = dist / vRobot
-				// curva = raio * ang / vRobot
-				int counter;
-				switch(msg.getComando()) {
-				case 0:
-					counter = msg.getArg1() / VROBOT;
-					break;
-				case 1:
-				case 2:
-					counter = msg.getArg1() * msg.getArg2() / VROBOT;
-					break;
-				default:
-					counter = 0;
-					break;
-				}
-				
-				while(counter != 0) {
-					try {
-						Thread.sleep(1);
-						counter--;
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-				estado = LER_CANAL;
+		System.out.println("Estado Robot = " + estado_robot);
+		switch(estado_robot) {
+		case DESATIVO:
+			try {
+				Thread.sleep(100);
+//					if(d.isComportamento()) 
+//						estado_robot = ATIVO;
+				break;
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}	
+		case ATIVO:
+			try {
+				Thread.sleep(100);
+//					if(d.isOnOff()) 
+//						estado_robot = LER_MEMORIA;
+				break;
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}	
+		case LER_MEMORIA:
+			if(!mensagens.isEmpty()) {
+				msg_memoria = mensagens.remove(0);
+				estado_robot = INTERPRETAR_MENSAGENS;
 			}
+			else {
+				try {
+					Thread.sleep(100);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			
+			break;
+		case INTERPRETAR_MENSAGENS:
+			
+			interpretarMensagens(msg_memoria.getComando(), msg_memoria.getArg1(), msg_memoria.getArg2());
+			System.out.println(msg_memoria.getComando());
+			estado_robot = DORMIR;
+			break;
+		case DORMIR:
+			// reta = dist / vRobot
+			// curva = raio * ang / vRobot
+			int counter;
+			switch(msg_memoria.getComando()) {
+			case 0:
+				counter = msg_memoria.getArg1() / VROBOT;
+				break;
+			case 1:
+			case 2:
+				counter = (int) (Math.ceil(msg_memoria.getArg1() * Math.PI/180) * msg_memoria.getArg2() / VROBOT);
+				break;
+			default:
+				counter = 0;
+				break;
+			}
+			
+			while(counter != 0) {
+				try {
+					Thread.sleep(1);
+					counter--;
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			estado_robot = LER_MEMORIA;
+			break;
 		}
 	}
 	
@@ -144,7 +176,14 @@ public class Subdito implements iSubdito {
 	}
 	
 	public void run() {
-		comunicarRei();
-		comunicarRobot();
+		while(estado_rei != FECHAR_CANAL || estado_robot != FECHAR_CANAL) {
+			comunicarRei();
+			comunicarRobot();
+		}
+	}
+	
+	public static void main(String[] args) {
+		Subdito subdito = new Subdito();
+		subdito.run();
 	}
 }

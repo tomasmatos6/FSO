@@ -2,7 +2,14 @@ package CanalComunicacao;
 import java.io.IOException;
 import java.nio.channels.FileLock;
 
+import Subdito.Subdito;
+
 public class canalComunicacaoConsistente extends canalComunicacao {
+	public canalComunicacaoConsistente(Subdito subdito) {
+		super(subdito);
+		// TODO Auto-generated constructor stub
+	}
+
 	private int lastMsgNum = -1;
 	public void getAndSetEscritor(Mensagem mensagem) {
 		try {
@@ -38,39 +45,5 @@ public class canalComunicacaoConsistente extends canalComunicacao {
 			
 		}
 		return currentMsg;
-	}
-	
-	public static void main(String[] args) {
-		Mensagem msg = new Mensagem(0, 3, 10, 90);
-		Mensagem msg1 = new Mensagem(1, 2, 11, 30);
-		Mensagem msg2 = new Mensagem(2, 2, 12, 30);
-		Mensagem msg3 = new Mensagem(3, 2, 13, 30);
-		Mensagem msg4 = new Mensagem(4, 2, 14, 30);
-		Mensagem msg5 = new Mensagem(5, 2, 15, 30);
-		Mensagem msg6 = new Mensagem(6, 2, 16, 30);
-		Mensagem msg7 = new Mensagem(7, 2, 17, 30);
-		Mensagem msg8 = new Mensagem(8, 2, 18, 30);
-		
-		canalComunicacaoConsistente ccc = new canalComunicacaoConsistente();
-		ccc.abrirCanal("");
-		ccc.getAndSetEscritor(msg);
-		System.out.println(ccc.getAndSetLeitor());
-		ccc.getAndSetEscritor(msg1);
-		ccc.getAndSetEscritor(msg2);
-		ccc.getAndSetEscritor(msg3);
-		ccc.getAndSetEscritor(msg4);
-		ccc.getAndSetEscritor(msg5);
-		ccc.getAndSetEscritor(msg6);
-		ccc.getAndSetEscritor(msg7);
-		System.out.println(ccc.getAndSetLeitor());
-		ccc.getAndSetEscritor(msg8);
-		System.out.println(ccc.getAndSetLeitor());
-		System.out.println(ccc.getAndSetLeitor());
-		System.out.println(ccc.getAndSetLeitor());
-		System.out.println(ccc.getAndSetLeitor());
-		System.out.println(ccc.getAndSetLeitor());
-		System.out.println(ccc.getAndSetLeitor());
-		System.out.println(ccc.getAndSetLeitor());
-		ccc.fecharCanal();
 	}
 }

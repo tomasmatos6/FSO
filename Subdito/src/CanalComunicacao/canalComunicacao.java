@@ -6,6 +6,9 @@ import java.io.RandomAccessFile;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 
+import Subdito.Dados;
+import Subdito.Subdito;
+
 public class canalComunicacao {
 	// ficheiro
 	private File ficheiro;
@@ -14,21 +17,24 @@ public class canalComunicacao {
 	// buffer
 	private MappedByteBuffer buffer;
 	// dimensão máxima em bytes do buffer
-	final int BUFFER_MAX= 128;
+	private int BUFFER_MAX;
 	// Indíces para o buffer circular
 	private int putIdx;
 	private int getIdx;
+	private Dados dados;
 	
 	//Tamanho máximo de uma mensagem
 	int msgOffset;
 	// construtor onde se cria o canal
-	public canalComunicacao(){ 
+	public canalComunicacao(Subdito subdito){ 
 		ficheiro=null;
 		canal= null;
 		buffer= null;
 		putIdx = 0;
 		getIdx = 0;
 		msgOffset = 16;
+		dados = subdito.getDados();
+		BUFFER_MAX = dados.getnMsg() * 16;
 	}
 	
 	// GET PARA O LEITOR
@@ -53,7 +59,7 @@ public class canalComunicacao {
 	// abre o canal de comunicação
 	public boolean abrirCanal(String path){
 		//cria um ficheiro com o nome comunicacao.dat
-		ficheiro = new File("comunicacao.dat");
+		ficheiro = new File(dados.getCanalPath());
 		//cria um canal de comunicação de leitura e escrita
 		try {
 		canal = new RandomAccessFile(ficheiro, "rw").getChannel();

@@ -1,8 +1,9 @@
 package Subdito;
+
 import robot.RobotLegoEV3;
 
 public class Dados {
-	private int raio, angulo, distancia;
+	private int raio, angulo, distancia, nMsg;
 	private String nomeRobot, canalPath;
 	private boolean onOff, openClose, comportamento;
 	private RobotLegoEV3 robot;
@@ -16,9 +17,18 @@ public class Dados {
 		openClose = false;
 		comportamento = false;
 		canalPath = "";
-		//robot = new RobotLegoEV3();
+		robot = new RobotLegoEV3();
+		nMsg = 8;
 	}
 	
+	public int getnMsg() {
+		return nMsg;
+	}
+
+	public void setnMsg(int nMsg) {
+		this.nMsg = nMsg;
+	}
+
 	public boolean isComportamento() {
 		return comportamento;
 	}
