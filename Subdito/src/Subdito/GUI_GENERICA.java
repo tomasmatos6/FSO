@@ -43,7 +43,8 @@ public class GUI_GENERICA extends JFrame{
 	
 	// minhas variaveis
 	protected Dados dados;
-	private RobotLegoEV3 robot;
+//	private RobotLegoEV3 robot;
+	private RobotDebug robot;
 	
 	
 	public void run() {

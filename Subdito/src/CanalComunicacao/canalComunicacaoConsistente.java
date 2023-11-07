@@ -18,6 +18,7 @@ public class canalComunicacaoConsistente extends canalComunicacao {
 			//Verificar se o leitor já leu a mensagem
 			if(msg.getComando() == 4 || msg.getNumero() == 0) {
 				enviarMensagem(mensagem, getPutIdx());
+				//System.out.println("Mensagem enviada - " + mensagem);
 				increasePutIdx();
 			}
 			fl.release();
@@ -32,18 +33,24 @@ public class canalComunicacaoConsistente extends canalComunicacao {
 		try {
 			FileLock fl = canal.lock();
 			Mensagem msg = receberMensagem(getGetIdx());
+			
 			// Verificar se esta a ler a mesma mensagem
-			if(msg.getNumero() != lastMsgNum) {
+			if(msg.getNumero() != lastMsgNum && msg.getComando() != 4 && msg.getNumero() != 0) {
 				lastMsgNum = msg.getNumero();
 				currentMsg = msg;
+				//System.out.println("Mensagem recebida - " + currentMsg);
 				// Mensagem com o mesmo numero e comando 4 que marca que a leitura foi realizada
 				enviarMensagem(new Mensagem(lastMsgNum, 4, 0, 0), getGetIdx());
 				increaseGetIdx();
 			}	
+			else {
+				currentMsg = null;
+			}
 			fl.release();
 		} catch(IOException e) {
 			
 		}
+		
 		return currentMsg;
 	}
 }

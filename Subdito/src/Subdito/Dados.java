@@ -6,7 +6,8 @@ public class Dados {
 	private int raio, angulo, distancia, nMsg;
 	private String nomeRobot, canalPath;
 	private boolean onOff, openClose, comportamento;
-	private RobotLegoEV3 robot;
+	//private RobotLegoEV3 robot;
+	private RobotDebug robot;
 	
 	public Dados() {
 		raio=10;
@@ -17,7 +18,8 @@ public class Dados {
 		openClose = false;
 		comportamento = false;
 		canalPath = "";
-		robot = new RobotLegoEV3();
+		//robot = new RobotLegoEV3();
+		robot = new RobotDebug();
 		nMsg = 8;
 	}
 	
@@ -53,11 +55,19 @@ public class Dados {
 		this.openClose = openClose;
 	}
 
-	public RobotLegoEV3 getRobot() {
+//	public RobotLegoEV3 getRobot() {
+//		return robot;
+//	}
+//
+//	public void setRobot(RobotLegoEV3 robot) {
+//		this.robot = robot;
+//	}
+	
+	public RobotDebug getRobot() {
 		return robot;
 	}
 
-	public void setRobot(RobotLegoEV3 robot) {
+	public void setRobot(RobotDebug robot) {
 		this.robot = robot;
 	}
 

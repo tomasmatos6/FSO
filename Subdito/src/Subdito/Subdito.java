@@ -13,7 +13,8 @@ public class Subdito implements iSubdito {
 	private canalComunicacaoConsistente ccc;
 	private Mensagem msg_canal, msg_memoria;
 	private ArrayList<Mensagem> mensagens;
-	private RobotLegoEV3 robot;
+//	private RobotLegoEV3 robot;
+	private RobotDebug robot;
 	private GUI_SUBDITO gui_subdito;
 	
 	public Subdito() {
@@ -42,11 +43,11 @@ public class Subdito implements iSubdito {
 		//System.out.println("Estado Rei = " + estado_rei);
 		switch(estado_rei) {
 		case DESATIVO:
+			if(d.isOpenClose()) {
+				estado_rei = ABRIR_CANAL;
+			}
 			try {
 				Thread.sleep(100);
-//					if(d.isOpenClose()) {
-//						estado_rei = ABRIR_CANAL;
-//					}
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -61,33 +62,37 @@ public class Subdito implements iSubdito {
 			msg_canal = ccc.getAndSetLeitor();
 			
 			if(msg_canal != null) {
-				//System.out.println("LER CANAL = " + msg);
+				//System.out.println("LER CANAL = " + msg_canal);
 				estado_rei = MEMORIZAR;	
+				break;
 			}
 			// SE NÃO HOUVER MENSAGENS
-			try {
-				Thread.sleep(100);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			else {
+				try {
+					Thread.sleep(100);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 			break;
 		case MEMORIZAR:
+			
 			mensagens.add(msg_canal);
-			System.out.println(mensagens);
+			//System.out.println(mensagens);
 			estado_rei = LER_CANAL;
 			break;
 		}
 	}
 	
 	private void comunicarRobot() {
-		System.out.println("Estado Robot = " + estado_robot);
+		//System.out.println("Estado Robot = " + estado_robot);
 		switch(estado_robot) {
 		case DESATIVO:
+			if(d.isComportamento()) 
+				estado_robot = ATIVO;
 			try {
 				Thread.sleep(100);
-//					if(d.isComportamento()) 
-//						estado_robot = ATIVO;
 				break;
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
@@ -96,8 +101,8 @@ public class Subdito implements iSubdito {
 		case ATIVO:
 			try {
 				Thread.sleep(100);
-//					if(d.isOnOff()) 
-//						estado_robot = LER_MEMORIA;
+					if(d.isOnOff()) 
+						estado_robot = LER_MEMORIA;
 				break;
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
@@ -107,6 +112,7 @@ public class Subdito implements iSubdito {
 			if(!mensagens.isEmpty()) {
 				msg_memoria = mensagens.remove(0);
 				estado_robot = INTERPRETAR_MENSAGENS;
+				break;
 			}
 			else {
 				try {
@@ -121,7 +127,6 @@ public class Subdito implements iSubdito {
 		case INTERPRETAR_MENSAGENS:
 			
 			interpretarMensagens(msg_memoria.getComando(), msg_memoria.getArg1(), msg_memoria.getArg2());
-			System.out.println(msg_memoria.getComando());
 			estado_robot = DORMIR;
 			break;
 		case DORMIR:
