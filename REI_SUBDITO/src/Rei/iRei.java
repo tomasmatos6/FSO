@@ -10,4 +10,5 @@ public interface iRei {
 	int DIREITA = 5;
 	int COMANDOS8 = 6;
 	int COMANDOS16 = 7;
+	int PARAR = 8;
 }

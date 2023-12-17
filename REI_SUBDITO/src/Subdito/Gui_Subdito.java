@@ -27,7 +27,7 @@ public class Gui_Subdito extends Gui_Generica {
 	private Subdito subdito;
 	
 	private int distInt, angInt;
-	private float raioFloat;
+	private double raioDouble;
 	
 	public Gui_Subdito(Subdito subdito) {
 		logText.setBounds(10, 299, 549, 217);
@@ -38,7 +38,7 @@ public class Gui_Subdito extends Gui_Generica {
 	}
 
 	private void initialize() {
-		
+		setLocation(800, 100);
 		JPanel panel = new JPanel();
 		panel.setBounds(10, 10, 545, 62);
 		panel.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0)), "Robot", TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -100,7 +100,7 @@ public class Gui_Subdito extends Gui_Generica {
 		lblDistncia.setBounds(12, 96, 70, 15);
 		controleMenu.add(lblDistncia);
 		
-		dist = new JTextField(""+distInt);
+		dist = new JTextField("20");
 		dist.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
@@ -114,7 +114,7 @@ public class Gui_Subdito extends Gui_Generica {
 		dist.setBounds(127, 87, 114, 26);
 		controleMenu.add(dist);
 		
-		ang = new JTextField(""+angInt);
+		ang = new JTextField("90");
 		ang.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
@@ -128,13 +128,13 @@ public class Gui_Subdito extends Gui_Generica {
 		ang.setBounds(127, 54, 114, 26);
 		controleMenu.add(ang);
 		
-		raio = new JTextField(""+raioFloat);
+		raio = new JTextField("10");
 		raio.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
-					raioFloat = Float.parseFloat(raio.getText());		
+					raioDouble = Double.parseDouble(raio.getText());		
 				} catch(NumberFormatException e) {
-					raio.setText(""+raioFloat);
+					raio.setText(""+raioDouble);
 				}
 			}
 		});
@@ -145,10 +145,10 @@ public class Gui_Subdito extends Gui_Generica {
 		leftButton = new JButton("←");
 		leftButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-//				robot.CurvarEsquerda(dados.getRaio(), dados.getAngulo());
-//				robot.Parar(false);
+				subdito.getRobot().CurvarEsquerda(raioDouble, angInt);
+				subdito.getRobot().Parar(false);
 				//rei.setEstado(Rei.ESQUERDA);
-				logText.append("Curva Esquerda("+raioFloat + ", "+ angInt+")\n");
+				logText.append("Curva Esquerda("+raioDouble + ", "+ angInt+")\n");
 			}
 		});
 		leftButton.setBounds(294, 51, 73, 25);
@@ -157,10 +157,10 @@ public class Gui_Subdito extends Gui_Generica {
 		rightButton = new JButton("→");
 		rightButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-//				robot.CurvarDireita(dados.getRaio(), dados.getAngulo());
-//				robot.Parar(false);
+				subdito.getRobot().CurvarDireita(raioDouble, angInt);
+				subdito.getRobot().Parar(false);
 				//rei.setEstado(Rei.DIREITA);
-				logText.append("Curva Direita(" + raioFloat + ", "+ angInt +")\n");
+				logText.append("Curva Direita(" + raioDouble + ", "+ angInt +")\n");
 			}
 		});
 		rightButton.setBounds(464, 51, 73, 25);
@@ -169,7 +169,7 @@ public class Gui_Subdito extends Gui_Generica {
 		stopButton = new JButton("Parar");
 		stopButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-//				robot.Parar(true);
+				subdito.getRobot().Parar(true);
 				//rei.setEstado(Rei.PARAR);
 				logText.append("Parar");
 			}
@@ -180,8 +180,8 @@ public class Gui_Subdito extends Gui_Generica {
 		backButton = new JButton("↓");
 		backButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-//				robot.Reta(-dados.getDistancia());
-//				robot.Parar(false);
+				subdito.getRobot().Reta(-distInt);
+				subdito.getRobot().Parar(false);
 				//rei.setEstado(Rei.TRAS);
 				logText.append("Reta("+-distInt+")\n");
 			}
@@ -192,15 +192,13 @@ public class Gui_Subdito extends Gui_Generica {
 		fowardButton = new JButton("↑");
 		fowardButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-//				robot.Reta(dados.getDistancia());
-//				robot.Parar(false);
+				subdito.getRobot().Reta(distInt);
+				subdito.getRobot().Parar(false);
 				//rei.setEstado(Rei.FRENTE);
 				logText.append("Reta("+distInt+")\n");
 			}
 		});
 		fowardButton.setBounds(379, 18, 73, 25);
 		controleMenu.add(fowardButton);
-		
-		setLocation(800, 100);
 	}
 }

@@ -18,16 +18,15 @@ public class Subdito extends Thread implements iSubdito {
 	
 	private Gui_Subdito gui;
 	
-	public Subdito(BufferCircular bc, Semaphore ht) {
+	public Subdito(BufferCircular bc, Semaphore ht, Gravar gravar) {
 		bufferCircular = bc;
 		haTrabalho = ht;
 		mensagem = new Mensagem();
 		livreMensagem = new Semaphore(1);
 		ocupadaMensagem = new Semaphore(0);
 		acessoMensagem = new Semaphore(1);
-		bloqueado = new Semaphore(1);
-		robot = new Gravar(bc);
-		
+		bloqueado = new Semaphore(0);
+		robot = gravar;
 		gui = new Gui_Subdito(this);
 	}
 	
@@ -71,15 +70,15 @@ public class Subdito extends Thread implements iSubdito {
 			break;
 		case 1:
 			robot.Reta(arg1);
-			robot.Parar(false);
+			//robot.Parar(false);
 			break;
 		case 2:
 			robot.CurvarEsquerda(arg1, arg2);
-			robot.Parar(false);
+			//robot.Parar(false);
 			break;
 		case 3:
 			robot.CurvarDireita(arg1, arg2);
-			robot.Parar(false);
+			//robot.Parar(false);
 			break;
 		}
 	}

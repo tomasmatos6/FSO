@@ -40,7 +40,7 @@ public class Gui_Rei extends Gui_Generica {
 	}
 	
 	private void initialize() {
-		
+		setLocation(100, 100);
 		controleMenu = new JPanel();
 		controleMenu.setBounds(13, 10, 546, 128);
 		controleMenu.setLayout(null);
@@ -131,7 +131,8 @@ public class Gui_Rei extends Gui_Generica {
 		stopButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 //				robot.Parar(true);
-				//rei.setEstado(Rei.PARAR);
+				rei.setEstado(Rei.PARAR);
+				rei.acordar();
 				logText.append("Parar");
 			}
 		});
@@ -229,7 +230,6 @@ public class Gui_Rei extends Gui_Generica {
 				}
 			}
 		});
-		setLocation(100, 100);
 	}
 	public static void main(String[] args) {
 		//new Gui_Rei();

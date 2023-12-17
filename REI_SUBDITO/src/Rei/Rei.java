@@ -156,6 +156,12 @@ public class Rei extends Thread implements iRei {
 				haTrabalho.release();	
 				estado = ESPERAR_TRABALHO;
 				break;
+			case PARAR:
+				setMensagem(cm.MsgParar());
+				inserirMensagem(mensagem);
+				haTrabalho.release();
+				estado = ESPERAR_TRABALHO;
+				break;
 			}
 		}
 	}

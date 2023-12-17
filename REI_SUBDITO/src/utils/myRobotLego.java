@@ -2,11 +2,15 @@ package utils;
 import robot.RobotLegoEV3;
 
 public class myRobotLego {
-	RobotDebug robot;
-	//RobotLegoEV3 robot;
-	public myRobotLego() {
-		//robot = new RobotLegoEV3();
-		robot = new RobotDebug();
+	protected RobotDebug robot;
+	//protected RobotLegoEV3 robot;
+	public myRobotLego(RobotDebug robot) {
+		//
+		this.robot = robot;
+	}
+	
+	public myRobotLego(RobotLegoEV3 robot) {
+		//this.robot = robot;
 	}
 	
 	public boolean OpenEV3(String s) {

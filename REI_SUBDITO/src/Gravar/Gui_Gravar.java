@@ -24,6 +24,7 @@ public class Gui_Gravar extends Gui_Generica {
 	private JButton ficheiroButton;
 	private Gravar gravar;
 	private String path;
+	JToggleButton gravarBtn, reproduzirBtn;
 	
 	public Gui_Gravar(Gravar gravar) {
 		setTitle("Gravar");
@@ -65,23 +66,29 @@ public class Gui_Gravar extends Gui_Generica {
 				if(dialog==JFileChooser.APPROVE_OPTION) {
 					File file = chooser.getSelectedFile();
 					path = file.getPath();
-					
 					pathFicheiro.setText(path);
+					gravarBtn.setEnabled(true);
+					reproduzirBtn.setEnabled(true);
 				}
-				
 			}
 		});
 		ficheiroButton.setBounds(488, 23, 35, 25);
 		gravarMenu.add(ficheiroButton);
 		
-		JToggleButton gravarBtn = new JToggleButton("Gravar");
+		gravarBtn = new JToggleButton("Gravar");
+		gravarBtn.setEnabled(false);
 		gravarBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(gravarBtn.isSelected()) {
-					gravar.setEstado(Gravar.GRAVAR_FICHEIRO);
+					gravar.setEstado(Gravar.GRAVAR);
+					gravar.acordar();
+					reproduzirBtn.setEnabled(false);
 					gravarBtn.setText("Parar");
 				} else {
-					gravar.setEstado(Gravar.GRAVAR);
+					gravar.setEstado(Gravar.ESPERAR_TRABALHO);
+					gravar.setGravar(false);
+					gravar.pararGravar();
+					reproduzirBtn.setEnabled(true);
 					gravarBtn.setText("Gravar");
 				}
 			}
@@ -89,17 +96,29 @@ public class Gui_Gravar extends Gui_Generica {
 		gravarBtn.setBounds(118, 58, 134, 40);
 		gravarMenu.add(gravarBtn);
 		
-		JToggleButton reproduzirBtn = new JToggleButton("Reproduzir");
+		reproduzirBtn = new JToggleButton("Reproduzir");
+		reproduzirBtn.setEnabled(false);
 		reproduzirBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(reproduzirBtn.isSelected()) {
+					gravar.setEstado(Gravar.LER_FICHEIRO);
+					gravar.acordar();
+					gravarBtn.setEnabled(false);
 					reproduzirBtn.setText("Parar");
 				} else {
+					gravar.setEstado(Gravar.ESPERAR_TRABALHO);
+					gravarBtn.setEnabled(true);
 					reproduzirBtn.setText("Reproduzir");
 				}
 			}
 		});
 		reproduzirBtn.setBounds(329, 58, 134, 40);
 		gravarMenu.add(reproduzirBtn);
+		
+		comportamentoCheck.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				gravar.desbloquear();
+			}
+		});
 	}
 }
