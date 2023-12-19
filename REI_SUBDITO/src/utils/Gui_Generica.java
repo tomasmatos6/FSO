@@ -26,13 +26,15 @@ import java.io.FileReader;
 import java.io.IOException;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
-import javax.swing.SpinnerNumberModel; 
+import javax.swing.SpinnerNumberModel;
+import javax.swing.JScrollPane; 
 
 
 public class Gui_Generica extends JFrame{
 	public JTextArea logText;
 	private JButton btnLimparLog;
 	protected JCheckBox comportamentoCheck;
+	private JScrollPane scrollPane;
 	
 	/**
 	 * Create the application.
@@ -66,9 +68,12 @@ public class Gui_Generica extends JFrame{
 		btnLimparLog = new JButton("Limpar Log");
 		btnLimparLog.setBounds(10, 528, 549, 25);
 		getContentPane().add(btnLimparLog);
+		
+		scrollPane = new JScrollPane();
+		scrollPane.setBounds(10, 299, 549, 217);
+		getContentPane().add(scrollPane);
 		logText = new JTextArea();
-		logText.setBounds(10, 299, 549, 217);
-		getContentPane().add(logText);
+		scrollPane.setViewportView(logText);
 		
 		
 		

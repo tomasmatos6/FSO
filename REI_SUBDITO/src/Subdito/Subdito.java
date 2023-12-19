@@ -15,7 +15,7 @@ public class Subdito extends Thread implements iSubdito {
 	private Semaphore livreMensagem, ocupadaMensagem, haTrabalho, acessoMensagem, bloqueado;
 	private myRobotLego robot;
 	private int comando, arg1, arg2;
-	
+	private int tempEstado;
 	private Gui_Subdito gui;
 	
 	public Subdito(BufferCircular bc, Semaphore ht, Gravar gravar) {
@@ -36,6 +36,20 @@ public class Subdito extends Thread implements iSubdito {
 
 	public void setRobot(myRobotLego robot) {
 		this.robot = robot;
+	}
+	
+	public void bloquear() {
+		tempEstado = estado;
+		estado = BLOQUEADO;
+	}
+	
+	public void desbloquear() {
+		estado = tempEstado;
+		bloqueado.release();
+	}
+	
+	public void setGravar(Gravar gravar) {
+		this.robot = gravar;
 	}
 
 	public Mensagem getMensagem() {

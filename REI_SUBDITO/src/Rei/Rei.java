@@ -1,8 +1,10 @@
 package Rei;
 import java.util.Random;
+import java.util.TimerTask;
 import java.util.concurrent.Semaphore;
 
 import javax.management.monitor.Monitor;
+import javax.swing.SwingUtilities;
 
 import comunicacao.BufferCircular;
 import comunicacao.CriarMensagem;
@@ -17,6 +19,15 @@ public class Rei extends Thread implements iRei {
 	private CriarMensagem cm;
 	private Dados dados;
 	private Gui_Rei gui;
+	private int tempEstado;
+	private Repeticao repetir;
+	int counter;
+	
+	enum Repeticao {
+		OFF,
+		REPETIR8,
+		REPETIR16
+	}
 	
 	public Rei(BufferCircular bc, Semaphore ht, Dados dados) {
 		bufferCircular = bc;
@@ -25,11 +36,12 @@ public class Rei extends Thread implements iRei {
 		livreMensagem = new Semaphore(1);
 		ocupadaMensagem = new Semaphore(0);
 		acessoMensagem = new Semaphore(1);
-		bloqueado = new Semaphore(1);
+		bloqueado = new Semaphore(0);
 		trabalhoRei = new Semaphore(0);
 		this.dados = dados;
 		cm = new CriarMensagem(dados);
 		gui = new Gui_Rei(this);
+		repetir = Repeticao.OFF;
 	}
 	
 	public int getEstado() {
@@ -45,11 +57,27 @@ public class Rei extends Thread implements iRei {
 	}
 
 	public void bloquear() {
+		tempEstado = estado;
 		estado = BLOQUEADO;
+		acordar();
 	}
 	
 	public void desbloquear() {
+		estado = tempEstado;
+		gui.notify();
 		bloqueado.release();
+	}
+	
+	public void comandos8() {
+		repetir = Repeticao.REPETIR8;
+		counter = 7;
+		estado = COMANDOS8;
+	}
+	
+	public void comandos16() {
+		repetir = Repeticao.REPETIR16;
+		counter = 15;
+		estado = COMANDOS16;
 	}
 	
 	public void setMensagem(Mensagem m) {
@@ -98,15 +126,15 @@ public class Rei extends Thread implements iRei {
 		String log = "";
 		switch(comando) {
 		case 1:
-			//rei.setEstado(Rei.FRENTE);
+			estado = Rei.FRENTE;
 			log = String.format("Reta(%d) \n", dados.getDistancia());
 			break;
 		case 2:
-			//rei.setEstado(Rei.DIREITA);
+			estado = Rei.DIREITA;
 			log = String.format("CurvaDireita(%d, %d) \n", dados.getAngulo(), dados.getRaio());
 			break;
 		case 3:
-			//rei.setEstado(Rei.ESQUERDA);
+			estado = Rei.ESQUERDA;
 			log = String.format("CurvaEsquerda(%d, %d) \n", dados.getAngulo(), dados.getRaio());
 			break;
 		}
@@ -120,7 +148,9 @@ public class Rei extends Thread implements iRei {
 			// BLOQUEADO
 			case BLOQUEADO:
 				try {
+					// PARAR O FUNCIONAMENTO DA GUI TAMBEM
 					bloqueado.acquire();
+					
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -140,21 +170,36 @@ public class Rei extends Thread implements iRei {
 				setMensagem(cm.MsgFrente());
 				inserirMensagem(mensagem);
 				haTrabalho.release();
-				estado = ESPERAR_TRABALHO;
+				if(repetir == Repeticao.REPETIR8)
+					estado = COMANDOS8;
+				else if(repetir == Repeticao.REPETIR16)
+					estado = COMANDOS16;
+				else
+					estado = ESPERAR_TRABALHO;
 				break;
 			// ESQUERDA
 			case ESQUERDA:
 				setMensagem(cm.MsgEsquerda());
 				inserirMensagem(mensagem);
 				haTrabalho.release();
-				estado = ESPERAR_TRABALHO;
+				if(repetir == Repeticao.REPETIR8)
+					estado = COMANDOS8;
+				else if(repetir == Repeticao.REPETIR16)
+					estado = COMANDOS16;
+				else
+					estado = ESPERAR_TRABALHO;
 				break;
 			// DIREITA
 			case DIREITA:
 				setMensagem(cm.MsgDireita());
 				inserirMensagem(mensagem);
 				haTrabalho.release();	
-				estado = ESPERAR_TRABALHO;
+				if(repetir == Repeticao.REPETIR8)
+					estado = COMANDOS8;
+				else if(repetir == Repeticao.REPETIR16)
+					estado = COMANDOS16;
+				else
+					estado = ESPERAR_TRABALHO;
 				break;
 			case PARAR:
 				setMensagem(cm.MsgParar());
@@ -162,6 +207,31 @@ public class Rei extends Thread implements iRei {
 				haTrabalho.release();
 				estado = ESPERAR_TRABALHO;
 				break;
+			case COMANDOS8:
+				if(counter == 0)
+					repetir = Repeticao.OFF;
+				counter--;
+				gui.logText.append(escolherComando());
+				try {
+					Thread.sleep(200);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		        break;
+			case COMANDOS16:
+				if(counter == 0)
+					repetir = Repeticao.OFF;
+				counter--;
+				escolherComando();
+				gui.logText.append(escolherComando());
+				try {
+					Thread.sleep(200);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		        break;
 			}
 		}
 	}

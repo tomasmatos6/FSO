@@ -29,7 +29,8 @@ public class Gravar extends myRobotLego implements Runnable, iGravar {
 	private int dist, ang;
 	private double raio;
 	private boolean b;
-	 
+	private int tempEstado; 
+	
 	public Gravar(RobotDebug robot) {
 		super(robot);
 		trabalho = new Semaphore(0);
@@ -64,7 +65,13 @@ public class Gravar extends myRobotLego implements Runnable, iGravar {
 		trabalho.release();
 	}
 	
+	public void bloquear() {
+		tempEstado = estado;
+		estado = BLOQUEADO;
+	}
+	
 	public void desbloquear() {
+		estado = tempEstado;
 		bloqueado.release();
 	}
 	
@@ -72,6 +79,7 @@ public class Gravar extends myRobotLego implements Runnable, iGravar {
 		estado = ESPERAR_TRABALHO;
 		haGravar.release();
 	}
+	
 
 	public synchronized void Reta(int distancia) {
 		estado = RETA;

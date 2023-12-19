@@ -172,31 +172,10 @@ public class Gui_Rei extends Gui_Generica {
 		
 		JButton btn8Comandos = new JButton("8 Comandos Aleatórios");
 		btn8Comandos.addActionListener(new ActionListener() {
-			int counter = 0; // Iniciar o counter
-		    
 		    @Override
 		    public void actionPerformed(ActionEvent e) {
-		    	//rei.setEstado(Rei.COMANDOS8);
-		        java.util.Timer timer = new java.util.Timer();
-		        
-		        // Criar uma rotina para correr o código repetidamente a cada 200 milisegundos
-		        timer.scheduleAtFixedRate(new TimerTask() {
-		            @Override
-		            public void run() {
-		                if (counter < 8) {
-		                	// Usar SwingUtilities.invokeLater para correr este código na Event Dispatch Thread
-		                    SwingUtilities.invokeLater(new Runnable() {
-		                        @Override
-		                        public void run() {
-		                            logText.append(rei.escolherComando());
-		                        }
-		                    });
-		                    counter++;
-		                } else {
-		                    timer.cancel();
-		                }
-		            }
-		        }, 0, 200); // Schedule the task to run every 200 milliseconds
+		    	rei.comandos8();
+		    	rei.acordar();
 		    }
 		});
 		btn8Comandos.setBounds(25, 28, 226, 31);
@@ -205,16 +184,8 @@ public class Gui_Rei extends Gui_Generica {
 		JButton btn16Comandos = new JButton("16 Comandos Aleatórios");
 		btn16Comandos.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//rei.setEstado(Rei.COMANDOS16);
-				for(int i = 0; i < 16; i++) {
-					logText.append(rei.escolherComando());
-					try {
-						Thread.sleep(200);
-					} catch (InterruptedException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-				}
+				rei.comandos16();
+				rei.acordar();
 			}
 		});
 		btn16Comandos.setBounds(300, 28, 226, 31);

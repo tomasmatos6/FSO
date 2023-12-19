@@ -15,27 +15,63 @@ public class ReiSubdito extends Thread {
 	Rei rei;
 	Subdito subdito;
 	Gravar gravar;
+	BufferCircular bc;
+	Semaphore trabalhoSubdito;
+	Dados dados;
 	
-	public void threadControl(Thread thread) {
-		if(thread == null) {
-			thread.start();
+	public ReiSubdito() {
+		bc = new BufferCircular();
+		trabalhoSubdito = new Semaphore(0);
+		dados = new Dados();
+	}
+	
+	public void reiControl(Boolean b) {
+		if(b) {
+			if(rei == null) {
+				rei = new Rei(bc, trabalhoSubdito, dados);
+				rei.start();
+			}
+			else {
+				rei.desbloquear();
+			}
+		}
+		else {
+			rei.bloquear();
+		}
+	}
+	
+	public void subditoControl(Boolean b) {
+		if(b) {
+			if(subdito == null) {
+				subdito = new Subdito(bc, trabalhoSubdito, gravar);
+				subdito.start();
+			}
+			else {
+				subdito.desbloquear();
+			}
+		}
+		else {
+			subdito.bloquear();
+		}
+	}
+	
+	public void gravarControl(Boolean b) {
+		if(b) {
+			if(gravar == null) {
+				gravar = new Gravar(new RobotDebug());
+				subdito.setRobot(gravar);
+				new Thread(gravar).start();
+			}
+			else {
+				gravar.desbloquear();
+			}
+		}
+		else {
+			gravar.bloquear();
 		}
 	}
 	
 	public static void main(String[] args) {
-		BufferCircular bc = new BufferCircular();
-		Semaphore trabalhoSubdito = new Semaphore(0);
-		Dados dados = new Dados();
-		
-		ReiSubdito rs = new ReiSubdito();
-		Rei rei = new Rei(bc, trabalhoSubdito, dados);
-		RobotDebug robot = new RobotDebug();
-		//RobotLegoEV3 robot = new RobotLegoEV3();
-		Gravar gravar = new Gravar(robot);
-		Subdito subdito = new Subdito(bc, trabalhoSubdito, gravar);
-		Thread x = new Thread(gravar);
-		rei.start();
-		subdito.start();
-		x.start();
+		new Gui_ReiSubdito(new ReiSubdito());
 	}
 }
