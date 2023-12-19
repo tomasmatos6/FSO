@@ -36,6 +36,21 @@ public class Gui_Subdito extends Gui_Generica {
 		initialize();
 		this.subdito = subdito;
 	}
+	
+	public void toggleAll(Boolean b) {
+		dist.setEnabled(b);
+		ang.setEnabled(b);
+		raio.setEnabled(b);
+		rightButton.setEnabled(b);
+		backButton.setEnabled(b);
+		fowardButton.setEnabled(b);
+		stopButton.setEnabled(b);
+		leftButton.setEnabled(b);
+		btnLimparLog.setEnabled(b);
+		comportamentoCheck.setEnabled(b);
+		nomeRobot.setEnabled(b);
+		rdbtnAbrirfecharRobot.setEnabled(b);
+	}
 
 	private void initialize() {
 		setLocation(800, 100);

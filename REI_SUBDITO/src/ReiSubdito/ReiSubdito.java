@@ -59,7 +59,8 @@ public class ReiSubdito extends Thread {
 		if(b) {
 			if(gravar == null) {
 				gravar = new Gravar(new RobotDebug());
-				subdito.setRobot(gravar);
+				if(subdito != null) 
+					subdito.setRobot(gravar);
 				new Thread(gravar).start();
 			}
 			else {

@@ -64,7 +64,7 @@ public class Rei extends Thread implements iRei {
 	
 	public void desbloquear() {
 		estado = tempEstado;
-		gui.notify();
+		gui.toggleAll(true);
 		bloqueado.release();
 	}
 	
@@ -148,7 +148,7 @@ public class Rei extends Thread implements iRei {
 			// BLOQUEADO
 			case BLOQUEADO:
 				try {
-					// PARAR O FUNCIONAMENTO DA GUI TAMBEM
+					gui.toggleAll(false);
 					bloqueado.acquire();
 					
 				} catch (InterruptedException e) {

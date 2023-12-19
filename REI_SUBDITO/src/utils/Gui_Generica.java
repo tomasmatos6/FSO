@@ -32,7 +32,7 @@ import javax.swing.JScrollPane;
 
 public class Gui_Generica extends JFrame{
 	public JTextArea logText;
-	private JButton btnLimparLog;
+	protected JButton btnLimparLog;
 	protected JCheckBox comportamentoCheck;
 	private JScrollPane scrollPane;
 	
@@ -66,6 +66,11 @@ public class Gui_Generica extends JFrame{
 		getContentPane().add(lblLog);
 		
 		btnLimparLog = new JButton("Limpar Log");
+		btnLimparLog.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				logText.removeAll();
+			}
+		});
 		btnLimparLog.setBounds(10, 528, 549, 25);
 		getContentPane().add(btnLimparLog);
 		

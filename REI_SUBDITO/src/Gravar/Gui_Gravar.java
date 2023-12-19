@@ -35,6 +35,15 @@ public class Gui_Gravar extends Gui_Generica {
 	public String getPath() {
 		return path;
 	}
+	
+	public void toggleAll(Boolean b) {
+		pathFicheiro.setEnabled(b);
+		ficheiroButton.setEnabled(b);
+		gravarBtn.setEnabled(b);
+		reproduzirBtn.setEnabled(b);
+		btnLimparLog.setEnabled(b);
+		comportamentoCheck.setEnabled(b);
+	}
 
 	private void initialize() {
 		setBounds(100, 100, 580, 600);

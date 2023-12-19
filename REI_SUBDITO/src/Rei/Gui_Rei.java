@@ -23,8 +23,8 @@ import utils.Gui_Generica;
 public class Gui_Rei extends Gui_Generica {
 	private static final long serialVersionUID = 1L;
 	private JTextField dist, ang, raio;
-	private JPanel controleMenu;
-	private JButton leftButton, rightButton, backButton, fowardButton, stopButton;
+	private JPanel controleMenu,randomMenu;
+	private JButton leftButton, rightButton, backButton, fowardButton, stopButton, btn8Comandos, btn16Comandos;
 	private Dados dados;
 	private Rei rei;
 	
@@ -37,6 +37,21 @@ public class Gui_Rei extends Gui_Generica {
 		dados = this.rei.getDados();
 		setTitle("Rei");
 		initialize();
+	}
+	
+	public void toggleAll(Boolean b) {
+		dist.setEnabled(b);
+		ang.setEnabled(b);
+		raio.setEnabled(b);
+		rightButton.setEnabled(b);
+		backButton.setEnabled(b);
+		fowardButton.setEnabled(b);
+		stopButton.setEnabled(b);
+		leftButton.setEnabled(b);
+		btn8Comandos.setEnabled(b);
+		btn16Comandos.setEnabled(b);
+		btnLimparLog.setEnabled(b);
+		comportamentoCheck.setEnabled(b);
 	}
 	
 	private void initialize() {
@@ -164,13 +179,13 @@ public class Gui_Rei extends Gui_Generica {
 		fowardButton.setBounds(379, 18, 73, 25);
 		controleMenu.add(fowardButton);
 		
-		JPanel panel = new JPanel();
-		panel.setBounds(10, 160, 546, 71);
-		panel.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0)), "Controlo do Robot Autom\u00E1tico", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		getContentPane().add(panel);
-		panel.setLayout(null);
+		randomMenu = new JPanel();
+		randomMenu.setBounds(10, 160, 546, 71);
+		randomMenu.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0)), "Controlo do Robot Autom\u00E1tico", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		getContentPane().add(randomMenu);
+		randomMenu.setLayout(null);
 		
-		JButton btn8Comandos = new JButton("8 Comandos Aleatórios");
+		btn8Comandos = new JButton("8 Comandos Aleatórios");
 		btn8Comandos.addActionListener(new ActionListener() {
 		    @Override
 		    public void actionPerformed(ActionEvent e) {
@@ -179,9 +194,9 @@ public class Gui_Rei extends Gui_Generica {
 		    }
 		});
 		btn8Comandos.setBounds(25, 28, 226, 31);
-		panel.add(btn8Comandos);
+		randomMenu.add(btn8Comandos);
 		
-		JButton btn16Comandos = new JButton("16 Comandos Aleatórios");
+		btn16Comandos = new JButton("16 Comandos Aleatórios");
 		btn16Comandos.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				rei.comandos16();
@@ -189,7 +204,7 @@ public class Gui_Rei extends Gui_Generica {
 			}
 		});
 		btn16Comandos.setBounds(300, 28, 226, 31);
-		panel.add(btn16Comandos);
+		randomMenu.add(btn16Comandos);
 		
 		comportamentoCheck.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -201,8 +216,5 @@ public class Gui_Rei extends Gui_Generica {
 				}
 			}
 		});
-	}
-	public static void main(String[] args) {
-		//new Gui_Rei();
 	}
 }

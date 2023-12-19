@@ -41,11 +41,18 @@ public class Subdito extends Thread implements iSubdito {
 	public void bloquear() {
 		tempEstado = estado;
 		estado = BLOQUEADO;
+		if(tempEstado == ESPERAR_TRABALHO)
+			acordar();
 	}
 	
 	public void desbloquear() {
 		estado = tempEstado;
+		gui.toggleAll(true);
 		bloqueado.release();
+	}
+	
+	public void acordar() {
+		haTrabalho.release();
 	}
 	
 	public void setGravar(Gravar gravar) {
@@ -130,6 +137,7 @@ public class Subdito extends Thread implements iSubdito {
 			switch(estado) {
 			case BLOQUEADO:
 				try {
+					gui.toggleAll(false);
 					bloqueado.acquire();
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
@@ -161,7 +169,8 @@ public class Subdito extends Thread implements iSubdito {
 			case ESPERAR_TRABALHO:
 				try {
 					haTrabalho.acquire();
-					estado = LER_COMANDOS;
+					if(estado != BLOQUEADO)
+						estado = LER_COMANDOS;
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

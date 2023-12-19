@@ -68,10 +68,12 @@ public class Gravar extends myRobotLego implements Runnable, iGravar {
 	public void bloquear() {
 		tempEstado = estado;
 		estado = BLOQUEADO;
+		acordar();
 	}
 	
 	public void desbloquear() {
 		estado = tempEstado;
+		gui.toggleAll(true);
 		bloqueado.release();
 	}
 	
@@ -190,6 +192,7 @@ public class Gravar extends myRobotLego implements Runnable, iGravar {
 			switch(estado) {
 			case BLOQUEADO:
 				try {
+					gui.toggleAll(false);
 					bloqueado.acquire();
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
