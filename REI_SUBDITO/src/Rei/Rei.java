@@ -55,10 +55,15 @@ public class Rei extends Thread implements iRei {
 	public void setEstado(int estado) {
 		this.estado = estado;
 	}
+	
+	public void toggleGui(Boolean b) {
+		gui.setVisible(b);
+	}
 
-	public void bloquear() {
+	public void bloquear(Boolean b) {
 		tempEstado = estado;
 		estado = BLOQUEADO;
+		gui.toggleAll(false);
 		acordar();
 	}
 	
@@ -148,7 +153,6 @@ public class Rei extends Thread implements iRei {
 			// BLOQUEADO
 			case BLOQUEADO:
 				try {
-					gui.toggleAll(false);
 					bloqueado.acquire();
 					
 				} catch (InterruptedException e) {

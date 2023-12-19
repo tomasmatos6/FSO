@@ -1,0 +1,4 @@
+reta 20
+esquerda 10.0 90
+direita 10.0 90
+parar true

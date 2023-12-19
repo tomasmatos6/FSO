@@ -8,7 +8,7 @@ import comunicacao.Mensagem;
 import utils.myRobotLego;
 
 public class Subdito extends Thread implements iSubdito {
-	private static int VROBOT = 30;
+	private static double VROBOT = 20.0;
 	private int estado = DESLIGADO;
 	private Mensagem mensagem;
 	private BufferCircular bufferCircular;
@@ -38,9 +38,14 @@ public class Subdito extends Thread implements iSubdito {
 		this.robot = robot;
 	}
 	
-	public void bloquear() {
+	public void toggleGui(Boolean b) {
+		gui.setVisible(b);
+	}
+	
+	public void bloquear(Boolean b) {
 		tempEstado = estado;
 		estado = BLOQUEADO;
+		gui.toggleAll(false);
 		if(tempEstado == ESPERAR_TRABALHO)
 			acordar();
 	}
@@ -112,17 +117,17 @@ public class Subdito extends Thread implements iSubdito {
 		this.estado = estado;
 	}
 	
-	private int dormir() {
+	private double dormir() {
 		// reta = dist / vRobot
 		// curva = raio * ang / vRobot
-		int counter;
+		double counter;
 		switch(comando) {
 		case 1:
 			counter = arg1 / VROBOT;
 			break;
 		case 2:
 		case 3:
-			counter = (int) (Math.ceil(arg1 * Math.PI/180) * arg2 / VROBOT);
+			counter = arg2 * Math.PI/180 * arg1 / VROBOT;
 			break;
 		default:
 			counter = 0;
@@ -137,7 +142,6 @@ public class Subdito extends Thread implements iSubdito {
 			switch(estado) {
 			case BLOQUEADO:
 				try {
-					gui.toggleAll(false);
 					bloqueado.acquire();
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
@@ -155,6 +159,7 @@ public class Subdito extends Thread implements iSubdito {
 			case ABRIR_ROBOT:
 				if(gui.nomeRobot.getText() != null) {
 					if(robot.OpenEV3(gui.nomeRobot.getText())) {
+						gui.logText.append(gui.nomeRobot.getText() + " Conectado!");
 						estado = ESPERAR_TRABALHO;
 						break;
 					}
@@ -195,16 +200,13 @@ public class Subdito extends Thread implements iSubdito {
 				estado = DORMIR;
 				break;
 			case DORMIR:
-				int counter = dormir();
-				
-				while(counter != 0) {
-					try {
-						Thread.sleep(1);
-						counter--;
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+				double counter = dormir();
+				try {
+					Thread.sleep((long)(1000*counter));
+					counter--;
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 				estado = ESPERAR_TRABALHO;
 				break;

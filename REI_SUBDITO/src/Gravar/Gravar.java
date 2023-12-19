@@ -17,7 +17,7 @@ import utils.RobotDebug;
 import utils.myRobotLego;
 
 public class Gravar extends myRobotLego implements Runnable, iGravar {
-	private int VROBOT = 30;
+	private double VROBOT = 20.0;
 	private boolean gravar;
 	private int estado;
 	private Semaphore trabalho, bloqueado, haGravar;
@@ -31,7 +31,7 @@ public class Gravar extends myRobotLego implements Runnable, iGravar {
 	private boolean b;
 	private int tempEstado; 
 	
-	public Gravar(RobotDebug robot) {
+	public Gravar(RobotLegoEV3 robot) {
 		super(robot);
 		trabalho = new Semaphore(0);
 		bloqueado = new Semaphore(0);
@@ -65,9 +65,10 @@ public class Gravar extends myRobotLego implements Runnable, iGravar {
 		trabalho.release();
 	}
 	
-	public void bloquear() {
+	public void bloquear(Boolean b) {
 		tempEstado = estado;
 		estado = BLOQUEADO;
+		gui.toggleAll(false);
 		acordar();
 	}
 	
@@ -75,6 +76,10 @@ public class Gravar extends myRobotLego implements Runnable, iGravar {
 		estado = tempEstado;
 		gui.toggleAll(true);
 		bloqueado.release();
+	}
+	
+	public void toggleGui(Boolean b) {
+		gui.setVisible(b);
 	}
 	
 	public void pararGravar() {
@@ -140,24 +145,21 @@ public class Gravar extends myRobotLego implements Runnable, iGravar {
 	}
 	
 	private synchronized void reproduzir() {
-		int counter = 0;
+		double counter;
 		while(!comandos.isEmpty()) {
 			counter = stringToComando(comandos.remove(0));
-			while(counter != 0) {
 				try {
-					Thread.sleep(100);
-					counter--;
+					Thread.sleep((long) (1000*counter));
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-			}
 		}
 	}
 	
-	private int stringToComando(String s) {
+	private double stringToComando(String s) {
 		String[] aux = s.split(" ");
-		int counter = 1;
+		double counter = 1;
 		int distAux;
 		double raioAux;
 		int angAux;
@@ -175,13 +177,13 @@ public class Gravar extends myRobotLego implements Runnable, iGravar {
 			raioAux = Double.parseDouble(aux[1]);
 			angAux = Integer.parseInt(aux[2]);
 			robot.CurvarEsquerda(raioAux, angAux);
-			counter = (int) (Math.ceil(raioAux * Math.PI/180) * angAux / VROBOT);
+			counter = angAux * (Math.PI/180) * raioAux / VROBOT;
 			break;
 		case "direita":
 			raioAux = Double.parseDouble(aux[1]);
 			angAux = Integer.parseInt(aux[2]);
 			robot.CurvarDireita(Double.parseDouble(aux[1]),Integer.parseInt(aux[2]));
-			counter = (int) (Math.ceil(raioAux * Math.PI/180) * angAux / VROBOT);
+			counter = angAux * (Math.PI/180) * raioAux / VROBOT;
 			break;
 		}
 		return counter;
@@ -192,7 +194,6 @@ public class Gravar extends myRobotLego implements Runnable, iGravar {
 			switch(estado) {
 			case BLOQUEADO:
 				try {
-					gui.toggleAll(false);
 					bloqueado.acquire();
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block

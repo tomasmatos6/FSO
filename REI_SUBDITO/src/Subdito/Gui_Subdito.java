@@ -35,6 +35,9 @@ public class Gui_Subdito extends Gui_Generica {
 		setTitle("Subdito");
 		initialize();
 		this.subdito = subdito;
+		distInt = 20;
+		angInt = 90;
+		raioDouble = 10;
 	}
 	
 	public void toggleAll(Boolean b) {
@@ -47,7 +50,6 @@ public class Gui_Subdito extends Gui_Generica {
 		stopButton.setEnabled(b);
 		leftButton.setEnabled(b);
 		btnLimparLog.setEnabled(b);
-		comportamentoCheck.setEnabled(b);
 		nomeRobot.setEnabled(b);
 		rdbtnAbrirfecharRobot.setEnabled(b);
 	}
@@ -87,7 +89,7 @@ public class Gui_Subdito extends Gui_Generica {
 						subdito.setEstado(Subdito.FECHAR_ROBOT);
 						//subdito.getRobot().CloseEV3();
 					}
-					logText.append("isOpenClose"+rdbtnAbrirfecharRobot.isSelected()+"\n");
+					//logText.append("isOpenClose"+rdbtnAbrirfecharRobot.isSelected()+"\n");
 				} catch(Exception exp) {
 					exp.printStackTrace();
 					logText.append("Robot não conectado \n");
@@ -215,5 +217,16 @@ public class Gui_Subdito extends Gui_Generica {
 		});
 		fowardButton.setBounds(379, 18, 73, 25);
 		controleMenu.add(fowardButton);
+		
+		comportamentoCheck.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(comportamentoCheck.isSelected()) {
+					subdito.desbloquear();
+				}
+				else {
+					subdito.bloquear(true);
+				}
+			}
+		});
 	}
 }

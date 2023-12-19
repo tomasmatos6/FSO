@@ -42,7 +42,6 @@ public class Gui_Gravar extends Gui_Generica {
 		gravarBtn.setEnabled(b);
 		reproduzirBtn.setEnabled(b);
 		btnLimparLog.setEnabled(b);
-		comportamentoCheck.setEnabled(b);
 	}
 
 	private void initialize() {
@@ -126,7 +125,12 @@ public class Gui_Gravar extends Gui_Generica {
 		
 		comportamentoCheck.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				gravar.desbloquear();
+				if(comportamentoCheck.isSelected()) {
+					gravar.desbloquear();
+				}
+				else {
+					gravar.bloquear(true);
+				}
 			}
 		});
 	}

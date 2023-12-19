@@ -32,11 +32,11 @@ public class ReiSubdito extends Thread {
 				rei.start();
 			}
 			else {
-				rei.desbloquear();
+				rei.toggleGui(true);
 			}
 		}
 		else {
-			rei.bloquear();
+			rei.toggleGui(false);
 		}
 	}
 	
@@ -47,28 +47,29 @@ public class ReiSubdito extends Thread {
 				subdito.start();
 			}
 			else {
-				subdito.desbloquear();
+				subdito.toggleGui(true);
 			}
 		}
 		else {
-			subdito.bloquear();
+			subdito.toggleGui(false);
 		}
 	}
 	
 	public void gravarControl(Boolean b) {
 		if(b) {
 			if(gravar == null) {
-				gravar = new Gravar(new RobotDebug());
+				gravar = new Gravar(new RobotLegoEV3());
 				if(subdito != null) 
 					subdito.setRobot(gravar);
 				new Thread(gravar).start();
 			}
 			else {
-				gravar.desbloquear();
+				gravar.toggleGui(true);
 			}
 		}
 		else {
-			gravar.bloquear();
+			gravar.toggleGui(false);
+			
 		}
 	}
 	

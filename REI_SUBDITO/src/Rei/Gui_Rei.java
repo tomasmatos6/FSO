@@ -51,7 +51,6 @@ public class Gui_Rei extends Gui_Generica {
 		btn8Comandos.setEnabled(b);
 		btn16Comandos.setEnabled(b);
 		btnLimparLog.setEnabled(b);
-		comportamentoCheck.setEnabled(b);
 	}
 	
 	private void initialize() {
@@ -212,7 +211,7 @@ public class Gui_Rei extends Gui_Generica {
 					rei.desbloquear();
 				}
 				else {
-					rei.bloquear();
+					rei.bloquear(true);
 				}
 			}
 		});
